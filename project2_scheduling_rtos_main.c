@@ -120,9 +120,9 @@ void LLF_Select_Task(){
 	int i;
 	int found_candidate=0;
 	for(i=0;i<NUMBER_OF_TASKS*2;i++){
-		if(WAIT_LIST[i].status==1 && currentLowest>WAIT_LIST[i].period_time){ // Vernal reemplazar WAIT_LIST[i].period_time por calculo de laxity 
+		if(WAIT_LIST[i].status==1 && currentLowestLaxity>WAIT_LIST[i].period_time){ // Vernal reemplazar WAIT_LIST[i].period_time por calculo de laxity 
 			position=i;
-			currentLowest=WAIT_LIST[i].period_time;// Vernal sustituir por calculo de laxity
+			currentLowestLaxity=WAIT_LIST[i].period_time;// Vernal sustituir por calculo de laxity
 			found_candidate=1;
 		}
 	}
@@ -176,7 +176,7 @@ void addTasktInWait(int id){
 
 //THE FOLLOWING SHOULD BE REPLACED BY GTK
 void create_tasks(){
-	NUMBER_OF_TASKS=2;
+	NUMBER_OF_TASKS=5;
 	ALGORITHMS_TO_EXECUTE=4; // THIS WOULD HOLD WHICH ALGORITHMS THE USER WANTS TO EXECUTE 1 RM, 2 EDF, 3 LLF, 4 RM & EDF, 5 RM LLF, 6 EDF & LLF, 7 RM & EDF & LLF
 	AMOUNT_OF_PERIODS=24;	
 
@@ -187,18 +187,27 @@ void create_tasks(){
 	WAIT_LIST =  (task_information *)malloc(NUMBER_OF_TASKS*2 * sizeof(task_information)); //this array will be the wait list
 	//Set the information of task 1
 	TASKS_TO_SCHEDULE[0].id=0;
-	TASKS_TO_SCHEDULE[0].computation_time=3;
-	TASKS_TO_SCHEDULE[0].period_time=6;
+	TASKS_TO_SCHEDULE[0].computation_time=1;
+	TASKS_TO_SCHEDULE[0].period_time=5;
 
 	//Set the information of task 2
 	TASKS_TO_SCHEDULE[1].id=1;
-	TASKS_TO_SCHEDULE[1].computation_time=4;
-	TASKS_TO_SCHEDULE[1].period_time=9;
+	TASKS_TO_SCHEDULE[1].computation_time=1;
+	TASKS_TO_SCHEDULE[1].period_time=5;
 
 	//Set the information of task 3
-	//TASKS_TO_SCHEDULE[2].id=2;
-	//TASKS_TO_SCHEDULE[2].computation_time=3;
-	//TASKS_TO_SCHEDULE[2].period_time=6;
+	TASKS_TO_SCHEDULE[2].id=2;
+	TASKS_TO_SCHEDULE[2].computation_time=1;
+	TASKS_TO_SCHEDULE[2].period_time=5;
+
+	//Set the information of task 4
+	TASKS_TO_SCHEDULE[3].id=3;
+	TASKS_TO_SCHEDULE[3].computation_time=1;
+	TASKS_TO_SCHEDULE[3].period_time=5;
+	//Set the information of task 5
+	TASKS_TO_SCHEDULE[4].id=4;
+	TASKS_TO_SCHEDULE[4].computation_time=1;
+	TASKS_TO_SCHEDULE[4].period_time=5;
 
 	switch (ALGORITHMS_TO_EXECUTE)
 	{
