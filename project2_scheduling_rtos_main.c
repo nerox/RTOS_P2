@@ -24,7 +24,7 @@ void EDF(){
 		deploy();
 	}
 	if (CRASH==0){
-		printf("Praise the lord!!!!!!, the simulation results have shown that no one has died YET, be sure to make enough simulations to ensure the safety of pregnant elders\n");					
+		printf("Praise the lord!!!!!!, the simulation results have shown that no one has died YET, be sure to make enough simulations to ensure the safety of pregnant elders\n");
 	}
 }
 
@@ -44,7 +44,7 @@ void RM(){
 		deploy();
 	}
 	if (CRASH==0){
-		printf("Praise the lord!!!!!!, the simulation results have shown that no one has died YET, be sure to make enough simulations to ensure the safety of pregnant elders\n");					
+		printf("Praise the lord!!!!!!, the simulation results have shown that no one has died YET, be sure to make enough simulations to ensure the safety of pregnant elders\n");
 	}
 }
 void EDF_Select_Task(){
@@ -61,7 +61,7 @@ void EDF_Select_Task(){
 	}
 	if(found_candidate==1){
 		WAIT_LIST[position].total_computed++;
-		printf("Currently executing task with id %d at time %d\n",WAIT_LIST[position].id,current_period);	
+		printf("Currently executing task with id %d at time %d\n",WAIT_LIST[position].id,current_period);
 		undeploy(position);
 	}
 }
@@ -79,7 +79,7 @@ void RM_Select_Task(){
 	}
 	if(found_candidate==1){
 		WAIT_LIST[position].total_computed++;
-		printf("Currently executing task with id %d at time %d\n",WAIT_LIST[position].id,current_period);	
+		printf("Currently executing task with id %d at time %d\n",WAIT_LIST[position].id,current_period);
 		undeploy(position);
 	}
 
@@ -89,7 +89,7 @@ void Verify_Crash(){
 	for(i=0;i<NUMBER_OF_TASKS*2;i++){
 		if(WAIT_LIST[i].status==1 && current_period>WAIT_LIST[i].deadline){
 			CRASH=1;
-			printf("Sadly people have died, pay respect to those who lost their loved ones, we warned you about this outcome %d\n",WAIT_LIST[i].deadline);	
+			printf("Sadly people have died, pay respect to those who lost their loved ones, we warned you about this outcome %d\n",WAIT_LIST[i].deadline);
 		}
 	}
 }
@@ -110,7 +110,7 @@ void LLF(){
 		deploy();
 	}
 	if (CRASH==0){
-		printf("Praise the lord!!!!!!, the simulation results have shown that no one has died YET, be sure to make enough simulations to ensure the safety of pregnant elders\n");					
+		printf("Praise the lord!!!!!!, the simulation results have shown that no one has died YET, be sure to make enough simulations to ensure the safety of pregnant elders\n");
 	}
 }
 
@@ -119,16 +119,18 @@ void LLF_Select_Task(){
 	double currentLowestLaxity=10000000000000000;
 	int i;
 	int found_candidate=0;
+	int laxity;
 	for(i=0;i<NUMBER_OF_TASKS*2;i++){
-		if(WAIT_LIST[i].status==1 && currentLowestLaxity>WAIT_LIST[i].period_time){ // Vernal reemplazar WAIT_LIST[i].period_time por calculo de laxity 
+		laxity = WAIT_LIST[i].deadline - current_period + WAIT_LIST[i].computation_time;
+		if(WAIT_LIST[i].status==1 && currentLowestLaxity>laxity){ // Vernal reemplazar WAIT_LIST[i].period_time por calculo de laxity
 			position=i;
-			currentLowestLaxity=WAIT_LIST[i].period_time;// Vernal sustituir por calculo de laxity
+			currentLowestLaxity=laxity;// Vernal sustituir por calculo de laxity
 			found_candidate=1;
 		}
 	}
 	if(found_candidate==1){
-		WAIT_LIST[position].total_computed++;
-		printf("Currently executing task with id %d at time %d\n",WAIT_LIST[position].id,current_period);	
+		WAIT_LIST[position].computation_time--;
+		printf("Currently executing task with id %d at time %d\n",WAIT_LIST[position].id,current_period);
 		undeploy(position);
 	}
 
@@ -138,7 +140,7 @@ void deploy(){
 	for(i=0;i<NUMBER_OF_TASKS;i++){
 		if(current_period%TASKS_TO_SCHEDULE[i].period_time==0){
 			printf("A new task entered at time %d\n",current_period);
-			addTasktInWait(i);			
+			addTasktInWait(i);
 		}
 		else{
 			//nothing to do, no new events added
@@ -148,9 +150,9 @@ void deploy(){
 void undeploy(int position){
 	if(WAIT_LIST[position].total_computed==WAIT_LIST[position].computation_time){
 		WAIT_LIST[position].status=0;
-		printf("Currently task with id %d has completed it's task at time %d\n",WAIT_LIST[position].id,current_period);	
+		printf("Currently task with id %d has completed it's task at time %d\n",WAIT_LIST[position].id,current_period);
 	}
-	
+
 }
 void addTasktInWait(int id){
 	int i;
@@ -170,15 +172,15 @@ void addTasktInWait(int id){
 	}
 	if(deployed==0){
 		CRASH=1;
-		printf("Sadly people have died, pay respect to those who lost their loved ones, we warned you about this outcome\n");			
+		printf("Sadly people have died, pay respect to those who lost their loved ones, we warned you about this outcome\n");
 	}
 }
 
 //THE FOLLOWING SHOULD BE REPLACED BY GTK
 void create_tasks(){
-	NUMBER_OF_TASKS=5;
-	ALGORITHMS_TO_EXECUTE=4; // THIS WOULD HOLD WHICH ALGORITHMS THE USER WANTS TO EXECUTE 1 RM, 2 EDF, 3 LLF, 4 RM & EDF, 5 RM LLF, 6 EDF & LLF, 7 RM & EDF & LLF
-	AMOUNT_OF_PERIODS=24;	
+	NUMBER_OF_TASKS=3;
+	ALGORITHMS_TO_EXECUTE=3; // THIS WOULD HOLD WHICH ALGORITHMS THE USER WANTS TO EXECUTE 1 RM, 2 EDF, 3 LLF, 4 RM & EDF, 5 RM LLF, 6 EDF & LLF, 7 RM & EDF & LLF
+	AMOUNT_OF_PERIODS=24;
 
 	/*
 		The following should be replaced by GTK, this simulates the behavior of setting up the tasks and their settings
@@ -187,27 +189,27 @@ void create_tasks(){
 	WAIT_LIST =  (task_information *)malloc(NUMBER_OF_TASKS*2 * sizeof(task_information)); //this array will be the wait list
 	//Set the information of task 1
 	TASKS_TO_SCHEDULE[0].id=0;
-	TASKS_TO_SCHEDULE[0].computation_time=1;
-	TASKS_TO_SCHEDULE[0].period_time=5;
+	TASKS_TO_SCHEDULE[0].computation_time=2;
+	TASKS_TO_SCHEDULE[0].period_time=6;
 
 	//Set the information of task 2
 	TASKS_TO_SCHEDULE[1].id=1;
-	TASKS_TO_SCHEDULE[1].computation_time=1;
-	TASKS_TO_SCHEDULE[1].period_time=5;
+	TASKS_TO_SCHEDULE[1].computation_time=2;
+	TASKS_TO_SCHEDULE[1].period_time=8;
 
 	//Set the information of task 3
 	TASKS_TO_SCHEDULE[2].id=2;
-	TASKS_TO_SCHEDULE[2].computation_time=1;
-	TASKS_TO_SCHEDULE[2].period_time=5;
+	TASKS_TO_SCHEDULE[2].computation_time=3;
+	TASKS_TO_SCHEDULE[2].period_time=10;
 
 	//Set the information of task 4
-	TASKS_TO_SCHEDULE[3].id=3;
+/*	TASKS_TO_SCHEDULE[3].id=3;
 	TASKS_TO_SCHEDULE[3].computation_time=1;
-	TASKS_TO_SCHEDULE[3].period_time=5;
+	TASKS_TO_SCHEDULE[3].period_time=6;
 	//Set the information of task 5
 	TASKS_TO_SCHEDULE[4].id=4;
 	TASKS_TO_SCHEDULE[4].computation_time=1;
-	TASKS_TO_SCHEDULE[4].period_time=5;
+	TASKS_TO_SCHEDULE[4].period_time=6;*/
 
 	switch (ALGORITHMS_TO_EXECUTE)
 	{
@@ -216,12 +218,12 @@ void create_tasks(){
 		printf("Performing the RM simulation \n");
 		RM();
 		break;
-	case 2: 
+	case 2:
 		printf("User selected to execute EDF\n");
 		printf("Performing the EDF simulation \n");
 		EDF();
 		break;
-	case 3: 
+	case 3:
 		printf("User selected to execute LLF\n");
 		printf("Performing the LLF simulation \n");
 		LLF();
@@ -233,21 +235,21 @@ void create_tasks(){
 		printf("Performing the LLF simulation \n");
 		EDF();
 		break;
-	case 5: 
+	case 5:
 		printf("User selected to execute RM & LLF\n");
 		printf("Performing the RM simulation \n");
 		RM();
 		printf("Performing the LLF simulation \n");
 		LLF();
 		break;
-	case 6: 
+	case 6:
 		printf("User selected to execute EDF & LLF\n");
 		printf("Performing the EDF simulation \n");
 		EDF();
 		printf("Performing the LLF simulation \n");
 		LLF();
 		break;
-	case 7: 
+	case 7:
 		printf("User selected to execute RM & EDF & LLF\n");
 		printf("Performing the RM simulation \n");
 		RM();
@@ -265,10 +267,10 @@ void create_tasks(){
 void EDF_schedulability_calculation(){
 	double u_value=summation_EDF_RM();
 	if (u_value<=1){
-		printf("Dear user, the selected values are canditates for EDF scheduling, you can take a deep breath no one will die today, the following simulation shows the schedulability testing\n");			
+		printf("Dear user, the selected values are canditates for EDF scheduling, you can take a deep breath no one will die today, the following simulation shows the schedulability testing\n");
 	}
 	else{
-		printf("Dear user, the selected values are not canditates for EDF scheduling. Be careful thousands can die today!!!!. Perhaps you should reconsider other values, the following simulation shows the schedulability testing\n");			
+		printf("Dear user, the selected values are not canditates for EDF scheduling. Be careful thousands can die today!!!!. Perhaps you should reconsider other values, the following simulation shows the schedulability testing\n");
 	}
 }
 
@@ -305,4 +307,5 @@ void resetValues(){
 	for (i=0;i<NUMBER_OF_TASKS*2 ;i++){
 		WAIT_LIST[i].status=0;
 	}
+
 }
