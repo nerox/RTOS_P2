@@ -9,6 +9,8 @@ int NUMBER_OF_TASKS;
 int ALGORITHMS_TO_EXECUTE;
 int AMOUNT_OF_PERIODS;
 int CRASH;
+
+#define MAX_CMM_LEN 2000
 typedef struct {
  int id;
  int computation_time;
@@ -20,7 +22,7 @@ typedef struct {
  int status;
 }task_information;
 int current_period;
-task_information *TASKS_TO_SCHEDULE;   
+task_information *TASKS_TO_SCHEDULE;
 task_information *WAIT_LIST;
 void EDF();
 void RM();
@@ -34,12 +36,9 @@ double u_n_calculation();
 void addTasktInWait(int id);
 void Verify_Crash();
 void resetValues();
+void latex_headers();
 void RM_Select_Task();
 void EDF_Select_Task();
 void undeploy(int position);
 void LLF_Select_Task();
 #endif
-
-
-
-
