@@ -4,6 +4,7 @@
 
 int main (int argc, char **argv)
 {
+	latex_headers();
 	create_tasks();
 	return 0;
 }
@@ -308,4 +309,12 @@ void resetValues(){
 		WAIT_LIST[i].status=0;
 	}
 
+}
+
+void latex_headers(){
+	printf("me cago en a\n");
+	char cmd[MAX_CMM_LEN] = "echo \\\\\\\\\\documentclass{beamer}\\\\\\\\\\mode'<'presentation'>'{\\\\\\\\\\usetheme{Madrid}}\\\\\\\\\\usepackage{graphicx}\\\\\\\\\\usepackage{booktabs}\\\\\\\\\\title[RM,\ EDF,\ LLF]{Proyecto\ 2:Calendarizacion\ en\ Tiempo Real}\\\\\\\\\\author{Vargas A, Camacho A, Morales V}\\\\\\\\\\institute[TEC]{Tecnologico de Costa Rica\\\\\\\\\\medskip\\\\\\\\\\textit{avargas@gmail.com, acamacho@gmail.com verny.morales@gmail.com}\\\\\\\\\\textit{3er Cuatrimestre}}\\\\\\\\\\date{\\\\\\\\\\today}\\\\\\\\\\begin{document}\\\\\\\\\\begin{frame}\\\\\\\\\\titlepage\\\\\\\\\\end{frame}\\\\\\\\\\begin{frame}\\\\\\\\\\frametitle{Rate Monotonic}\\\\\\\\\\tableofcontents\\\\\\\\\\end{frame}\\\\\\\\\\end{document} >> doc.tex";
+	printf("%s\n",cmd);
+
+	system(cmd);
 }
