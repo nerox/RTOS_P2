@@ -24,6 +24,7 @@ typedef struct {
 int current_period;
 task_information *TASKS_TO_SCHEDULE;
 task_information *WAIT_LIST;
+int * scheduled_Matrix;
 void EDF();
 void RM();
 void LLF();
@@ -41,4 +42,8 @@ void RM_Select_Task();
 void EDF_Select_Task();
 void undeploy(int position);
 void LLF_Select_Task();
+void latex_table_slide();
+void cleanOutPutMatrix();
+void endlatex();
 #endif
+

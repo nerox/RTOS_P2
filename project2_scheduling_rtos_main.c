@@ -4,12 +4,16 @@
 
 int main (int argc, char **argv)
 {
+	remove("doc.tex");
 	latex_headers();
 	create_tasks();
+	latex_table_slide();
+	endlatex();
 	return 0;
 }
 
 void EDF(){
+	cleanOutPutMatrix();
 	resetValues();
 	EDF_schedulability_calculation();
 	CRASH=0;
@@ -30,6 +34,7 @@ void EDF(){
 }
 
 void RM(){
+	cleanOutPutMatrix();
 	resetValues();
 	RM_schedulability_calculation();
 	CRASH=0;
@@ -62,6 +67,7 @@ void EDF_Select_Task(){
 	}
 	if(found_candidate==1){
 		WAIT_LIST[position].total_computed++;
+		scheduled_Matrix[WAIT_LIST[position].id*AMOUNT_OF_PERIODS + (current_period-1)]=WAIT_LIST[position].id;
 		printf("Currently executing task with id %d at time %d\n",WAIT_LIST[position].id,current_period);
 		undeploy(position);
 	}
@@ -80,6 +86,7 @@ void RM_Select_Task(){
 	}
 	if(found_candidate==1){
 		WAIT_LIST[position].total_computed++;
+		scheduled_Matrix[WAIT_LIST[position].id*AMOUNT_OF_PERIODS + (current_period-1)]=WAIT_LIST[position].id;
 		printf("Currently executing task with id %d at time %d\n",WAIT_LIST[position].id,current_period);
 		undeploy(position);
 	}
@@ -96,6 +103,7 @@ void Verify_Crash(){
 }
 
 void LLF(){
+	cleanOutPutMatrix();
 	resetValues();
 	//EDF_schedulability_calculation(); Vernal agregue un metodo que diga si el algoritmo es calendarizable o no
 	CRASH=0;
@@ -131,6 +139,7 @@ void LLF_Select_Task(){
 	}
 	if(found_candidate==1){
 		WAIT_LIST[position].computation_time--;
+		scheduled_Matrix[WAIT_LIST[position].id*AMOUNT_OF_PERIODS + (current_period-1)]=WAIT_LIST[position].id;
 		printf("Currently executing task with id %d at time %d\n",WAIT_LIST[position].id,current_period);
 		undeploy(position);
 	}
@@ -180,7 +189,7 @@ void addTasktInWait(int id){
 //THE FOLLOWING SHOULD BE REPLACED BY GTK
 void create_tasks(){
 	NUMBER_OF_TASKS=3;
-	ALGORITHMS_TO_EXECUTE=3; // THIS WOULD HOLD WHICH ALGORITHMS THE USER WANTS TO EXECUTE 1 RM, 2 EDF, 3 LLF, 4 RM & EDF, 5 RM LLF, 6 EDF & LLF, 7 RM & EDF & LLF
+	ALGORITHMS_TO_EXECUTE=1; // THIS WOULD HOLD WHICH ALGORITHMS THE USER WANTS TO EXECUTE 1 RM, 2 EDF, 3 LLF, 4 RM & EDF, 5 RM LLF, 6 EDF & LLF, 7 RM & EDF & LLF
 	AMOUNT_OF_PERIODS=24;
 
 	/*
@@ -190,18 +199,18 @@ void create_tasks(){
 	WAIT_LIST =  (task_information *)malloc(NUMBER_OF_TASKS*2 * sizeof(task_information)); //this array will be the wait list
 	//Set the information of task 1
 	TASKS_TO_SCHEDULE[0].id=0;
-	TASKS_TO_SCHEDULE[0].computation_time=2;
-	TASKS_TO_SCHEDULE[0].period_time=6;
+	TASKS_TO_SCHEDULE[0].computation_time=1;
+	TASKS_TO_SCHEDULE[0].period_time=4;
 
 	//Set the information of task 2
 	TASKS_TO_SCHEDULE[1].id=1;
 	TASKS_TO_SCHEDULE[1].computation_time=2;
-	TASKS_TO_SCHEDULE[1].period_time=8;
+	TASKS_TO_SCHEDULE[1].period_time=6;
 
 	//Set the information of task 3
 	TASKS_TO_SCHEDULE[2].id=2;
 	TASKS_TO_SCHEDULE[2].computation_time=3;
-	TASKS_TO_SCHEDULE[2].period_time=10;
+	TASKS_TO_SCHEDULE[2].period_time=8;
 
 	//Set the information of task 4
 /*	TASKS_TO_SCHEDULE[3].id=3;
@@ -211,7 +220,7 @@ void create_tasks(){
 	TASKS_TO_SCHEDULE[4].id=4;
 	TASKS_TO_SCHEDULE[4].computation_time=1;
 	TASKS_TO_SCHEDULE[4].period_time=6;*/
-
+	scheduled_Matrix= (int *)malloc((NUMBER_OF_TASKS * AMOUNT_OF_PERIODS)* sizeof(int));
 	switch (ALGORITHMS_TO_EXECUTE)
 	{
 	case 1:
@@ -310,11 +319,91 @@ void resetValues(){
 	}
 
 }
+void latex_table_slide(){
+	FILE *out = fopen("doc.tex", "a");  
+	fprintf(out, "%s", "\\begin{frame}\\frametitle{Scheduling\ Results}\\begin{table}\\adjustbox{max height=\\dimexpr\\textheight-5.5cm\\relax,max width=\\textwidth}{\\begin{tabular}");  
+	char tables[MAX_CMM_LEN]="";
+	strcat(tables, "{l");
+	int i,j;
+	for (i=0;i<AMOUNT_OF_PERIODS;i++){
+		strcat(tables, "|c");
+	}
+	strcat(tables, "}\n");
+	strcat(tables, " ");
+	char intstr[4];
+	for (i=0;i<AMOUNT_OF_PERIODS;i++){
+		sprintf(intstr, "&%d", i);
+		strcat(tables, intstr);
+	}
+	strcat(tables, "\\\\ \n \\hline \n");
+	for (i=0;i<NUMBER_OF_TASKS;i++){
+		strcat(tables, "Task");
+		for (j=0;j<AMOUNT_OF_PERIODS;j++){
+			int COLOR=scheduled_Matrix[i*AMOUNT_OF_PERIODS + j]%NUMBER_OF_TASKS;
+			switch (COLOR)
+			{
+			case 0:
+				strcat(tables, "&\\cellcolor{blue}");
+				break;
+			case 1:
+				strcat(tables, "&\\cellcolor{green}");
+				break;
+			case 2:
+				strcat(tables, "&\\cellcolor{cyan}");
+				break;
+			case 3:
+				strcat(tables, "&\\cellcolor{magenta}");
+				break;
+			case 4:
+				strcat(tables, "&\\cellcolor{yellow}");
+				break;
+			case 5:
+				strcat(tables, "&\\cellcolor{orange}");
+				break;
+			default: // code to be executed if n doesn't match any cases
+				strcat(tables, "& ");
+				break;
+			}
+		}
+		strcat(tables, "&\\\\ \\hline\n");
+	}
+	fprintf(out, "%s", tables);  
+	fprintf(out, "%s", "\\end{tabular}\n}\n\\caption{Simulation results}\\end{table}\\end{frame}");  
+	fclose(out); 
 
+/*
+\begin{frame}\frametitle{Scheduling Results}
+
+\begin{table}
+
+\adjustbox{max height=\dimexpr\textheight-5.5cm\relax,
+           max width=\textwidth}{
+\begin{tabular}{l|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c}\hline\\Task&c&c&c&c&c&c&c&c&c&c&c&c&c&c&c&c&c&c&c&c&c&c&c&c\\Task&c&c&c&c&c&c&c&c&c&c&c&c&c&c&c&c&c&c&c&c&c&c&c&c\\Task&c&c&c&c&c&c&c&c&c&c&c&c&c&c&c&c&c&c&c&c&c&c&c&c\\\end{tabular}
+}
+\caption{Simulation results}\end{table}
+
+\end{frame}
+*/
+}
+void endlatex(){
+	char cmd[MAX_CMM_LEN] = "echo \\\\\\\\\\end{document} >> doc.tex";
+	system(cmd);
+}
 void latex_headers(){
 	printf("me cago en a\n");
-	char cmd[MAX_CMM_LEN] = "echo \\\\\\\\\\documentclass{beamer}\\\\\\\\\\mode'<'presentation'>'{\\\\\\\\\\usetheme{Madrid}}\\\\\\\\\\usepackage{graphicx}\\\\\\\\\\usepackage{booktabs}\\\\\\\\\\title[RM,\ EDF,\ LLF]{Proyecto\ 2:Calendarizacion\ en\ Tiempo Real}\\\\\\\\\\author{Vargas A, Camacho A, Morales V}\\\\\\\\\\institute[TEC]{Tecnologico de Costa Rica\\\\\\\\\\medskip\\\\\\\\\\textit{avargas@gmail.com, acamacho@gmail.com verny.morales@gmail.com}\\\\\\\\\\textit{3er Cuatrimestre}}\\\\\\\\\\date{\\\\\\\\\\today}\\\\\\\\\\begin{document}\\\\\\\\\\begin{frame}\\\\\\\\\\titlepage\\\\\\\\\\end{frame}\\\\\\\\\\begin{frame}\\\\\\\\\\frametitle{Rate Monotonic}\\\\\\\\\\tableofcontents\\\\\\\\\\end{frame}\\\\\\\\\\end{document} >> doc.tex";
+	char cmd[MAX_CMM_LEN] = "echo \\\\\\\\\\documentclass{beamer}\\\\\\\\\\mode'<'presentation'>'{\\\\\\\\\\usetheme{Madrid}}\\\\\\\\\\usepackage{booktabs,adjustbox}\\\\\\\\\\usepackage{xcolor,colortbl}\\\\\\\\\\title[RM,\ EDF,\ LLF]{Proyecto\ 2:Calendarizacion\ en\ Tiempo Real}\\\\\\\\\\author{Vargas A, Camacho A, Morales V}\\\\\\\\\\institute[TEC]{Tecnologico de Costa Rica\\\\\\\\\\medskip\\\\\\\\\\textit{avargas@gmail.com,\\\\ acamacho@gmail.com\\\\ verny.morales@gmail.com}\\\\\\\\\\textit{3er Cuatrimestre}}\\\\\\\\\\date{\\\\\\\\\\today}\\\\\\\\\\begin{document}\\\\\\\\\\begin{frame}\\\\\\\\\\titlepage\\\\\\\\\\end{frame}\\\\\\\\\\begin{frame}\\\\\\\\\\frametitle{Rate Monotonic}\\\\\\\\\\tableofcontents\\\\\\\\\\end{frame} >> doc.tex";
 	printf("%s\n",cmd);
 
 	system(cmd);
+}
+void cleanOutPutMatrix(){
+
+	int i,j;
+	for (i = 0; i < NUMBER_OF_TASKS; i++)
+	{
+	for (j = 0; j < AMOUNT_OF_PERIODS; j++)
+	{
+		scheduled_Matrix[i*AMOUNT_OF_PERIODS + j]=-1;
+	}
+	}
 }
