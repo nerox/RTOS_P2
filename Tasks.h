@@ -10,7 +10,7 @@ int ALGORITHMS_TO_EXECUTE;
 int AMOUNT_OF_PERIODS;
 int CRASH;
 
-#define MAX_CMM_LEN 2000
+#define MAX_CMM_LEN 6000
 typedef struct {
  int id;
  int computation_time;
@@ -36,7 +36,13 @@ double u_n_calculation();
 void addTasktInWait(int id);
 void Verify_Crash();
 void resetValues();
-void latex_headers();
+void latex_rm();
+void latex_edf();
+void latex_llf();
+void latex_rm_edf();
+void latex_rm_lff();
+void latex_edf_lff();
+void latex_rm_edf_lff();
 void RM_Select_Task();
 void EDF_Select_Task();
 void undeploy(int position);

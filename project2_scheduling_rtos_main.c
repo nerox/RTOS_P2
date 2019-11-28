@@ -4,7 +4,6 @@
 
 int main (int argc, char **argv)
 {
-	latex_headers();
 	create_tasks();
 	return 0;
 }
@@ -180,7 +179,7 @@ void addTasktInWait(int id){
 //THE FOLLOWING SHOULD BE REPLACED BY GTK
 void create_tasks(){
 	NUMBER_OF_TASKS=3;
-	ALGORITHMS_TO_EXECUTE=3; // THIS WOULD HOLD WHICH ALGORITHMS THE USER WANTS TO EXECUTE 1 RM, 2 EDF, 3 LLF, 4 RM & EDF, 5 RM LLF, 6 EDF & LLF, 7 RM & EDF & LLF
+	ALGORITHMS_TO_EXECUTE=7; // THIS WOULD HOLD WHICH ALGORITHMS THE USER WANTS TO EXECUTE 1 RM, 2 EDF, 3 LLF, 4 RM & EDF, 5 RM LLF, 6 EDF & LLF, 7 RM & EDF & LLF
 	AMOUNT_OF_PERIODS=24;
 
 	/*
@@ -217,21 +216,25 @@ void create_tasks(){
 	case 1:
 		printf("User selected to execute RM\n");
 		printf("Performing the RM simulation \n");
+		latex_rm();
 		RM();
 		break;
 	case 2:
 		printf("User selected to execute EDF\n");
 		printf("Performing the EDF simulation \n");
+		latex_edf();
 		EDF();
 		break;
 	case 3:
 		printf("User selected to execute LLF\n");
 		printf("Performing the LLF simulation \n");
+		latex_llf();
 		LLF();
 		break;
 	case 4:
 		printf("User selected to execute RM & EDF\n");
 		printf("Performing the RM simulation \n");
+		latex_rm_edf();
 		RM();
 		printf("Performing the LLF simulation \n");
 		EDF();
@@ -239,6 +242,7 @@ void create_tasks(){
 	case 5:
 		printf("User selected to execute RM & LLF\n");
 		printf("Performing the RM simulation \n");
+		latex_rm_lff();
 		RM();
 		printf("Performing the LLF simulation \n");
 		LLF();
@@ -246,6 +250,7 @@ void create_tasks(){
 	case 6:
 		printf("User selected to execute EDF & LLF\n");
 		printf("Performing the EDF simulation \n");
+		latex_edf_lff();
 		EDF();
 		printf("Performing the LLF simulation \n");
 		LLF();
@@ -253,6 +258,7 @@ void create_tasks(){
 	case 7:
 		printf("User selected to execute RM & EDF & LLF\n");
 		printf("Performing the RM simulation \n");
+		latex_rm_edf_lff();
 		RM();
 		printf("Performing the EDF simulation \n");
 		EDF();
@@ -311,9 +317,45 @@ void resetValues(){
 
 }
 
-void latex_headers(){
-	printf("me cago en a\n");
-	char cmd[MAX_CMM_LEN] = "echo \\\\\\\\\\documentclass{beamer}\\\\\\\\\\mode'<'presentation'>'{\\\\\\\\\\usetheme{Madrid}}\\\\\\\\\\usepackage{graphicx}\\\\\\\\\\usepackage{booktabs}\\\\\\\\\\title[RM,\ EDF,\ LLF]{Proyecto\ 2:Calendarizacion\ en\ Tiempo Real}\\\\\\\\\\author{Vargas A, Camacho A, Morales V}\\\\\\\\\\institute[TEC]{Tecnologico de Costa Rica\\\\\\\\\\medskip\\\\\\\\\\textit{avargas@gmail.com, acamacho@gmail.com verny.morales@gmail.com}\\\\\\\\\\textit{3er Cuatrimestre}}\\\\\\\\\\date{\\\\\\\\\\today}\\\\\\\\\\begin{document}\\\\\\\\\\begin{frame}\\\\\\\\\\titlepage\\\\\\\\\\end{frame}\\\\\\\\\\begin{frame}\\\\\\\\\\frametitle{Rate Monotonic}\\\\\\\\\\tableofcontents\\\\\\\\\\end{frame}\\\\\\\\\\end{document} >> doc.tex";
+void latex_rm(){
+	char cmd[MAX_CMM_LEN] = "echo \\\\\\\\\\documentclass{beamer}\\\\\\\\\\mode'<'presentation'>' {\\\\\\\\\\usetheme{Madrid}}\\\\\\\\\\usepackage{graphicx}\\\\\\\\\\usepackage{booktabs}\\\\\\\\\\title[RM, EDF, LLF]{Proyecto\ 2:\ Calendarizacion\ en\ Tiempo\ Real}\\\\\\\\\\author{Vargas A,\ Camacho A,\ Morales V}\\\\\\\\\\institute[TEC]{Tecnologico\ de\ Costa Rica \\\\\\\\\\medskip\\\\\\\\\\textit{avargas@gmail.com,\ acamacho@gmail.com,\ verny.morales@gmail.com}\\\\\\\\\\textit{3er Cuatrimestre}}\\\\\\\\\\date{\\\\\\\\\\today}\\\\\\\\\\begin{document}\\\\\\\\\\begin{frame}\\\\\\\\\\titlepage\\\\\\\\\\end{frame}\\\\\\\\\\begin{frame}\\\\\\\\\\frametitle{Rate\ Monotonic}\\\\\\\\\\begin{block}{Tipo}Algoritmo\ de\ Scheduling \Dinamico,\ utilizado\ para\ la\ reslucion\ de\ problemas\ caoticos,\ como\ por\ ejemplo\ el\ problema\ de\ los\ carros\ autonomos.\\\\\\\\\\end{block}\\\\\\\\\\begin{block}{Manejo\ de\ prioridades}Algoritmo\ de\ prioridades\ estaticas,\ esto\ quiere\ decir\ que\ ninguna\ tarea\ puede\ cambiar\ su\ prioridad.\ Donde\ la\ prioridad\ de\ una\ tarea\ siempre\ es\ igual\ a\ su\ periodo.\ Periodo\ mas\ corto,\ mayor\ la\ prioridad.\\\\\\\\\\end{block}\\\\\\\\\\begin{block}{Supuestos}Todas\ las\ tareas\ criticas\ son\ periodicas,\ e\ independientes.\ El\ tiempo\ de\ computacion\ se\ conoce\ a\ priori,\ y\ el\ cambio\ de\ contexto\ es\ igual\ a\ cero,\ o\ ya\ esta\ considerado\ en\ el\ tiempo\ de\ computacion.\\\\\\\\\\end{block}\\\\\\\\\\end{frame}\\\\\\\\\\begin{frame}\\\\\\\\\\frametitle{Teoremas\ de\ Scheduling}\\\\\\\\\\begin{theorem}[Parametros\ a\ tomar\ en\ cuenta]$\\\\\\\\\\mu = \\\\\\\\\\Sigma \\\\\\\\\\frac{Ci}{Pi}$ Utilizacion\ del\ CPU\$\ 'Un' = n \'2''^'\\\\\\\\\\frac{'1'}{n} - '1' $ donde\ n\ es\ la\ cantidad\ de\ tareas\\\\\\\\\\end{theorem}\\\\\\\\\\begin{theorem}[Condiciones\ de\ suficiencia]$\\\\\\\\\\mu \\\\\\\\\\leq Un $ Tareas\ calendarizables\ $\\\\\\\\\\mu \\\\\\\\\\geq Un$ Debido\ a\ que\ es\ una\ condicion\ de\ sufuciencia\ podria\ ser\ calendarizable\$\\\\\\\\\\mu \\\\\\\\\\succ '1'$ Tareas\ no\ calendarizables\\\\\\\\\\end{theorem}\\\\\\\\\\end{frame}\\\\\\\\\\end{document} >> doc.tex";
+	printf("%s\n",cmd);
+
+	system(cmd);
+}
+void latex_edf(){
+	char cmd[MAX_CMM_LEN] = "echo \\\\\\\\\\documentclass{beamer}\\\\\\\\\\mode'<'presentation'>' {\\\\\\\\\\usetheme{Madrid}}\\\\\\\\\\usepackage{graphicx}\\\\\\\\\\usepackage{booktabs} \\\\\\\\\\title[RM, EDF, LLF]{Proyecto\ 2:\ Calendarizacion\ en\ Tiempo\ Real} \\\\\\\\\\author{Vargas A,\ Camacho A,\ Morales V} \\\\\\\\\\institute[TEC] {Tecnologico\ de\ Costa\ Rica \\\\\\\\\\medskip\\\\\\\\\\textit{avargas@gmail.com,\ acamacho@gmail.com,\ verny.morales@gmail.com}\\\\\\\\\\textit{3er\ Cuatrimestre}}\\\\\\\\\\date{\\\\\\\\\\today} \\\\\\\\\\begin{document}\\\\\\\\\\begin{frame}\\\\\\\\\\titlepage\\\\\\\\\\end{frame}\\\\\\\\\\begin{frame}\\\\\\\\\\frametitle{Early\ Deadline\ First}\\\\\\\\\\begin{block}{Tipo}Algoritmo\ de\ Scheduling\ Dinamico,\ en\ donde\ las\ tareas\ son\ periodicas.\ Se\ considera\ un\ algoritmo\ optimo\ para\ algoritmos\ de\ prioridades\ dinamicas.\ Es\ un\ algoritmo\ de\ tipo\ expropiativo.\\\\\\\\\\end{block}\\\\\\\\\\begin{block}{Manejo\ de\ prioridades}El\ nombre\ del\ algoritmo\ indica\ la\ politica\ de\ prioridad.\ La\ prioridad\ es\ inversamente\ proporcional\ al\ tiempo\ que\ falta\ para\ el\ deadline.\ El\ deadline\ de\ cada\ tarea\ es\ igual\ al\ periodo\ de\ la\ misma. \\\\\\\\\\end{block}\\\\\\\\\\begin{block}{Supuestos}Todas\ las\ tareas\ criticas\ son\ periodicas,\ e\ independientes.\ El\ tiempo\ de\ computacion\ se\ conoce\ a\ priori,\ y\ el\ cambio\ de\ contexto\ es\ igual\ a\ cero,\ o\ ya\ esta\ considerado\ en\ el\ tiempo\ de\ computacion.\\\\\\\\\\end{block}\\\\\\\\\\end{frame}\\\\\\\\\\begin{frame}\\\\\\\\\\frametitle{Teoremas\ de\ Scheduling}\\\\\\\\\\begin{theorem}[Parametros\ a\ tomar\ en\ cuenta]$\\\\\\\\\\mu = \\\\\\\\\\Sigma \\\\\\\\\\frac{Ci}{Pi}$ Utilizacion\ del\ CPU\\\\\\\\\\end{theorem}\\\\\\\\\\begin{theorem}[Condiciones\ de\ suficiencia]$\\\\\\\\\\mu \\\\\\\\\\leq 1 $ Tareas\ calendarizables,\ ya\ que\ es\ una\ condicion\ necesario\ y\ de\ suficiencia\\\\\\\\\\end{theorem}\\\\\\\\\\end{frame}\\\\\\\\\\end{document} >> doc.tex";
+	printf("%s\n",cmd);
+
+	system(cmd);
+}
+
+void latex_llf(){
+	char cmd[MAX_CMM_LEN] = "echo \\\\\\\\\\documentclass{beamer}\\\\\\\\\\mode'<'presentation'>' {\\\\\\\\\\usetheme{Madrid}}\\\\\\\\\\usepackage{graphicx}\\\\\\\\\\usepackage{booktabs} \\\\\\\\\\title[RM, EDF, LLF]{Proyecto 2: Calendarizacion en Tiempo Real} \\\\\\\\\\author{Vargas A, Camacho A, Morales V} \\\\\\\\\\institute[TEC] {Tecnologico de Costa Rica  \\\\\\\\\\medskip\\\\\\\\\\textit{avargas@gmail.com, acamacho@gmail.com, verny.morales@gmail.com} \\\\\\\\\\textit{3er Cuatrimestre}}\\\\\\\\\\date{\\\\\\\\\\today} \\\\\\\\\\begin{document}\\\\\\\\\\begin{frame}\\\\\\\\\\titlepage\\\\\\\\\\end{frame}\\\\\\\\\\begin{frame}\\\\\\\\\\frametitle{Least Laxity First}\\\\\\\\\\begin{block}{Tipo y manejo dr prioridades}Es un algoritmo donde las prioridades se manejan de forma dinamica. Por cada unidad de tiempo se deben de evaluar las prioridades para asi conocer el Laxity de cada tarea, y tomar una decision sobre el scheduling de las mismas.\\\\\\\\\\end{block}\\\\\\\\\\end{frame}\\\\\\\\\\begin{frame}\\\\\\\\\\frametitle{Teoremas de Scheduling}\\\\\\\\\\begin{theorem}[Parametros a tomar en cuenta]$ Laxity = Di - Ti + Ci $ Donde D es el deadline proximo de la tarea, T es el tiempo actual de ejecucion y C es el tiempo computacional faltante de la tarea \\\\\\\\\\end{theorem}\\\\\\\\\\begin{theorem}[Criterio de Scheduling]Se toma el L menor entre todas las tareas en la cola de Ready y se ejecuta la tarea para cada tiempo de ejecucion\\\\\\\\\\end{theorem}\\\\\\\\\\end{frame}\\\\\\\\\\end{document} >> doc.tex";
+	printf("%s\n",cmd);
+
+	system(cmd);
+}
+void latex_rm_edf(){
+	char cmd[MAX_CMM_LEN] = "echo \\\\\\\\\\documentclass{beamer}\\\\\\\\\\mode'<'presentation'>' {\\\\\\\\\\usetheme{Madrid}}\\\\\\\\\\usepackage{graphicx}\\\\\\\\\\usepackage{booktabs}\\\\\\\\\\title[RM, EDF, LLF]{Proyecto\ 2:\ Calendarizacion\ en\ Tiempo\ Real}\\\\\\\\\\author{Vargas A,\ Camacho A,\ Morales V}\\\\\\\\\\institute[TEC]{Tecnologico\ de\ Costa Rica \\\\\\\\\\medskip\\\\\\\\\\textit{avargas@gmail.com,\ acamacho@gmail.com,\ verny.morales@gmail.com}\\\\\\\\\\textit{3er Cuatrimestre}}\\\\\\\\\\date{\\\\\\\\\\today}\\\\\\\\\\begin{document}\\\\\\\\\\begin{frame}\\\\\\\\\\titlepage\\\\\\\\\\end{frame}\\\\\\\\\\begin{frame}\\\\\\\\\\frametitle{Rate\ Monotonic}\\\\\\\\\\begin{block}{Tipo}Algoritmo\ de\ Scheduling \Dinamico,\ utilizado\ para\ la\ reslucion\ de\ problemas\ caoticos,\ como\ por\ ejemplo\ el\ problema\ de\ los\ carros\ autonomos.\\\\\\\\\\end{block}\\\\\\\\\\begin{block}{Manejo\ de\ prioridades}Algoritmo\ de\ prioridades\ estaticas,\ esto\ quiere\ decir\ que\ ninguna\ tarea\ puede\ cambiar\ su\ prioridad.\ Donde\ la\ prioridad\ de\ una\ tarea\ siempre\ es\ igual\ a\ su\ periodo.\ Periodo\ mas\ corto,\ mayor\ la\ prioridad.\\\\\\\\\\end{block}\\\\\\\\\\begin{block}{Supuestos}Todas\ las\ tareas\ criticas\ son\ periodicas,\ e\ independientes.\ El\ tiempo\ de\ computacion\ se\ conoce\ a\ priori,\ y\ el\ cambio\ de\ contexto\ es\ igual\ a\ cero,\ o\ ya\ esta\ considerado\ en\ el\ tiempo\ de\ computacion.\\\\\\\\\\end{block}\\\\\\\\\\end{frame}\\\\\\\\\\begin{frame}\\\\\\\\\\frametitle{Teoremas\ de\ Scheduling}\\\\\\\\\\begin{theorem}[Parametros\ a\ tomar\ en\ cuenta]$\\\\\\\\\\mu = \\\\\\\\\\Sigma \\\\\\\\\\frac{Ci}{Pi}$ Utilizacion\ del\ CPU\$\ 'Un' = n \'2''^'\\\\\\\\\\frac{'1'}{n} - '1' $ donde\ n\ es\ la\ cantidad\ de\ tareas\\\\\\\\\\end{theorem}\\\\\\\\\\begin{theorem}[Condiciones\ de\ suficiencia]$\\\\\\\\\\mu \\\\\\\\\\leq Un $ Tareas\ calendarizables\ $\\\\\\\\\\mu \\\\\\\\\\geq Un$ Debido\ a\ que\ es\ una\ condicion\ de\ sufuciencia\ podria\ ser\ calendarizable\$\\\\\\\\\\mu \\\\\\\\\\succ '1'$ Tareas\ no\ calendarizables\\\\\\\\\\end{theorem}\\\\\\\\\\end{frame}\\\\\\\\\\begin{frame}\\\\\\\\\\frametitle{Early\ Deadline\ First}\\\\\\\\\\begin{block}{Tipo}Algoritmo\ de\ Scheduling\ Dinamico,\ en\ donde\ las\ tareas\ son\ periodicas.\ Se\ considera\ un\ algoritmo\ optimo\ para\ algoritmos\ de\ prioridades\ dinamicas.\ Es\ un\ algoritmo\ de\ tipo\ expropiativo.\\\\\\\\\\end{block}\\\\\\\\\\begin{block}{Manejo\ de\ prioridades}El\ nombre\ del\ algoritmo\ indica\ la\ politica\ de\ prioridad.\ La\ prioridad\ es\ inversamente\ proporcional\ al\ tiempo\ que\ falta\ para\ el\ deadline.\ El\ deadline\ de\ cada\ tarea\ es\ igual\ al\ periodo\ de\ la\ misma. \\\\\\\\\\end{block}\\\\\\\\\\begin{block}{Supuestos}Todas\ las\ tareas\ criticas\ son\ periodicas,\ e\ independientes.\ El\ tiempo\ de\ computacion\ se\ conoce\ a\ priori,\ y\ el\ cambio\ de\ contexto\ es\ igual\ a\ cero,\ o\ ya\ esta\ considerado\ en\ el\ tiempo\ de\ computacion.\\\\\\\\\\end{block}\\\\\\\\\\end{frame}\\\\\\\\\\begin{frame}\\\\\\\\\\frametitle{Teoremas\ de\ Scheduling}\\\\\\\\\\begin{theorem}[Parametros\ a\ tomar\ en\ cuenta]$\\\\\\\\\\mu = \\\\\\\\\\Sigma \\\\\\\\\\frac{Ci}{Pi}$ Utilizacion\ del\ CPU\\\\\\\\\\end{theorem}\\\\\\\\\\begin{theorem}[Condiciones\ de\ suficiencia]$\\\\\\\\\\mu \\\\\\\\\\leq 1 $ Tareas\ calendarizables,\ ya\ que\ es\ una\ condicion\ necesario\ y\ de\ suficiencia\\\\\\\\\\end{theorem}\\\\\\\\\\end{frame}\\\\\\\\\\end{document} >> doc.tex";
+	printf("%s\n",cmd);
+
+	system(cmd);
+}
+void latex_rm_lff(){
+	char cmd[MAX_CMM_LEN] = "echo \\\\\\\\\\documentclass{beamer}\\\\\\\\\\mode'<'presentation'>' {\\\\\\\\\\usetheme{Madrid}}\\\\\\\\\\usepackage{graphicx}\\\\\\\\\\usepackage{booktabs}\\\\\\\\\\title[RM, EDF, LLF]{Proyecto\ 2:\ Calendarizacion\ en\ Tiempo\ Real}\\\\\\\\\\author{Vargas A,\ Camacho A,\ Morales V}\\\\\\\\\\institute[TEC]{Tecnologico\ de\ Costa Rica \\\\\\\\\\medskip\\\\\\\\\\textit{avargas@gmail.com,\ acamacho@gmail.com,\ verny.morales@gmail.com}\\\\\\\\\\textit{3er Cuatrimestre}}\\\\\\\\\\date{\\\\\\\\\\today}\\\\\\\\\\begin{document}\\\\\\\\\\begin{frame}\\\\\\\\\\titlepage\\\\\\\\\\end{frame}\\\\\\\\\\begin{frame}\\\\\\\\\\frametitle{Rate\ Monotonic}\\\\\\\\\\begin{block}{Tipo}Algoritmo\ de\ Scheduling \Dinamico,\ utilizado\ para\ la\ reslucion\ de\ problemas\ caoticos,\ como\ por\ ejemplo\ el\ problema\ de\ los\ carros\ autonomos.\\\\\\\\\\end{block}\\\\\\\\\\begin{block}{Manejo\ de\ prioridades}Algoritmo\ de\ prioridades\ estaticas,\ esto\ quiere\ decir\ que\ ninguna\ tarea\ puede\ cambiar\ su\ prioridad.\ Donde\ la\ prioridad\ de\ una\ tarea\ siempre\ es\ igual\ a\ su\ periodo.\ Periodo\ mas\ corto,\ mayor\ la\ prioridad.\\\\\\\\\\end{block}\\\\\\\\\\begin{block}{Supuestos}Todas\ las\ tareas\ criticas\ son\ periodicas,\ e\ independientes.\ El\ tiempo\ de\ computacion\ se\ conoce\ a\ priori,\ y\ el\ cambio\ de\ contexto\ es\ igual\ a\ cero,\ o\ ya\ esta\ considerado\ en\ el\ tiempo\ de\ computacion.\\\\\\\\\\end{block}\\\\\\\\\\end{frame}\\\\\\\\\\begin{frame}\\\\\\\\\\frametitle{Teoremas\ de\ Scheduling}\\\\\\\\\\begin{theorem}[Parametros\ a\ tomar\ en\ cuenta]$\\\\\\\\\\mu = \\\\\\\\\\Sigma \\\\\\\\\\frac{Ci}{Pi}$ Utilizacion\ del\ CPU\$\ 'Un' = n \'2''^'\\\\\\\\\\frac{'1'}{n} - '1' $ donde\ n\ es\ la\ cantidad\ de\ tareas\\\\\\\\\\end{theorem}\\\\\\\\\\begin{theorem}[Condiciones\ de\ suficiencia]$\\\\\\\\\\mu \\\\\\\\\\leq Un $ Tareas\ calendarizables\ $\\\\\\\\\\mu \\\\\\\\\\geq Un$ Debido\ a\ que\ es\ una\ condicion\ de\ sufuciencia\ podria\ ser\ calendarizable\$\\\\\\\\\\mu \\\\\\\\\\succ '1'$ Tareas\ no\ calendarizables\\\\\\\\\\end{theorem}\\\\\\\\\\end{frame}\\\\\\\\\\begin{frame}\\\\\\\\\\frametitle{Least Laxity First}\\\\\\\\\\begin{block}{Tipo y manejo dr prioridades}Es un algoritmo donde las prioridades se manejan de forma dinamica. Por cada unidad de tiempo se deben de evaluar las prioridades para asi conocer el Laxity de cada tarea, y tomar una decision sobre el scheduling de las mismas.\\\\\\\\\\end{block}\\\\\\\\\\end{frame}\\\\\\\\\\begin{frame}\\\\\\\\\\frametitle{Teoremas de Scheduling}\\\\\\\\\\begin{theorem}[Parametros a tomar en cuenta]$ Laxity = Di - Ti + Ci $ Donde D es el deadline proximo de la tarea, T es el tiempo actual de ejecucion y C es el tiempo computacional faltante de la tarea \\\\\\\\\\end{theorem}\\\\\\\\\\begin{theorem}[Criterio de Scheduling]Se toma el L menor entre todas las tareas en la cola de Ready y se ejecuta la tarea para cada tiempo de ejecucion\\\\\\\\\\end{theorem}\\\\\\\\\\end{frame}\\\\\\\\\\end{document}>> doc.tex";
+	printf("%s\n",cmd);
+
+	system(cmd);
+}
+void latex_edf_lff(){
+	char cmd[MAX_CMM_LEN] = "echo \\\\\\\\\\documentclass{beamer}\\\\\\\\\\mode'<'presentation'>' {\\\\\\\\\\usetheme{Madrid}}\\\\\\\\\\usepackage{graphicx}\\\\\\\\\\usepackage{booktabs} \\\\\\\\\\title[RM, EDF, LLF]{Proyecto\ 2:\ Calendarizacion\ en\ Tiempo\ Real} \\\\\\\\\\author{Vargas A,\ Camacho A,\ Morales V} \\\\\\\\\\institute[TEC] {Tecnologico\ de\ Costa\ Rica \\\\\\\\\\medskip\\\\\\\\\\textit{avargas@gmail.com,\ acamacho@gmail.com,\ verny.morales@gmail.com}\\\\\\\\\\textit{3er\ Cuatrimestre}}\\\\\\\\\\date{\\\\\\\\\\today} \\\\\\\\\\begin{document}\\\\\\\\\\begin{frame}\\\\\\\\\\titlepage\\\\\\\\\\end{frame}\\\\\\\\\\begin{frame}\\\\\\\\\\frametitle{Early\ Deadline\ First}\\\\\\\\\\begin{block}{Tipo}Algoritmo\ de\ Scheduling\ Dinamico,\ en\ donde\ las\ tareas\ son\ periodicas.\ Se\ considera\ un\ algoritmo\ optimo\ para\ algoritmos\ de\ prioridades\ dinamicas.\ Es\ un\ algoritmo\ de\ tipo\ expropiativo.\\\\\\\\\\end{block}\\\\\\\\\\begin{block}{Manejo\ de\ prioridades}El\ nombre\ del\ algoritmo\ indica\ la\ politica\ de\ prioridad.\ La\ prioridad\ es\ inversamente\ proporcional\ al\ tiempo\ que\ falta\ para\ el\ deadline.\ El\ deadline\ de\ cada\ tarea\ es\ igual\ al\ periodo\ de\ la\ misma. \\\\\\\\\\end{block}\\\\\\\\\\begin{block}{Supuestos}Todas\ las\ tareas\ criticas\ son\ periodicas,\ e\ independientes.\ El\ tiempo\ de\ computacion\ se\ conoce\ a\ priori,\ y\ el\ cambio\ de\ contexto\ es\ igual\ a\ cero,\ o\ ya\ esta\ considerado\ en\ el\ tiempo\ de\ computacion.\\\\\\\\\\end{block}\\\\\\\\\\end{frame}\\\\\\\\\\begin{frame}\\\\\\\\\\frametitle{Teoremas\ de\ Scheduling}\\\\\\\\\\begin{theorem}[Parametros\ a\ tomar\ en\ cuenta]$\\\\\\\\\\mu = \\\\\\\\\\Sigma \\\\\\\\\\frac{Ci}{Pi}$ Utilizacion\ del\ CPU\\\\\\\\\\end{theorem}\\\\\\\\\\begin{theorem}[Condiciones\ de\ suficiencia]$\\\\\\\\\\mu \\\\\\\\\\leq 1 $ Tareas\ calendarizables,\ ya\ que\ es\ una\ condicion\ necesario\ y\ de\ suficiencia\\\\\\\\\\end{theorem}\\\\\\\\\\end{frame}\\\\\\\\\\begin{frame}\\\\\\\\\\frametitle{Least Laxity First}\\\\\\\\\\begin{block}{Tipo y manejo dr prioridades}Es un algoritmo donde las prioridades se manejan de forma dinamica. Por cada unidad de tiempo se deben de evaluar las prioridades para asi conocer el Laxity de cada tarea, y tomar una decision sobre el scheduling de las mismas.\\\\\\\\\\end{block}\\\\\\\\\\end{frame}\\\\\\\\\\begin{frame}\\\\\\\\\\frametitle{Teoremas de Scheduling}\\\\\\\\\\begin{theorem}[Parametros a tomar en cuenta]$ Laxity = Di - Ti + Ci $ Donde D es el deadline proximo de la tarea, T es el tiempo actual de ejecucion y C es el tiempo computacional faltante de la tarea \\\\\\\\\\end{theorem}\\\\\\\\\\begin{theorem}[Criterio de Scheduling]Se toma el L menor entre todas las tareas en la cola de Ready y se ejecuta la tarea para cada tiempo de ejecucion\\\\\\\\\\end{theorem}\\\\\\\\\\end{frame}\\\\\\\\\\end{document} >> doc.tex";
+	printf("%s\n",cmd);
+
+	system(cmd);
+}
+void latex_rm_edf_lff(){
+	char cmd[MAX_CMM_LEN] = "echo \\\\\\\\\\documentclass{beamer}\\\\\\\\\\mode'<'presentation'>' {\\\\\\\\\\usetheme{Madrid}}\\\\\\\\\\usepackage{graphicx}\\\\\\\\\\usepackage{booktabs}\\\\\\\\\\title[RM, EDF, LLF]{Proyecto\ 2:\ Calendarizacion\ en\ Tiempo\ Real}\\\\\\\\\\author{Vargas A,\ Camacho A,\ Morales V}\\\\\\\\\\institute[TEC]{Tecnologico\ de\ Costa Rica \\\\\\\\\\medskip\\\\\\\\\\textit{avargas@gmail.com,\ acamacho@gmail.com,\ verny.morales@gmail.com}\\\\\\\\\\textit{3er Cuatrimestre}}\\\\\\\\\\date{\\\\\\\\\\today}\\\\\\\\\\begin{document}\\\\\\\\\\begin{frame}\\\\\\\\\\titlepage\\\\\\\\\\end{frame}\\\\\\\\\\begin{frame}\\\\\\\\\\frametitle{Rate\ Monotonic}\\\\\\\\\\begin{block}{Tipo}Algoritmo\ de\ Scheduling \Dinamico,\ utilizado\ para\ la\ reslucion\ de\ problemas\ caoticos,\ como\ por\ ejemplo\ el\ problema\ de\ los\ carros\ autonomos.\\\\\\\\\\end{block}\\\\\\\\\\begin{block}{Manejo\ de\ prioridades}Algoritmo\ de\ prioridades\ estaticas,\ esto\ quiere\ decir\ que\ ninguna\ tarea\ puede\ cambiar\ su\ prioridad.\ Donde\ la\ prioridad\ de\ una\ tarea\ siempre\ es\ igual\ a\ su\ periodo.\ Periodo\ mas\ corto,\ mayor\ la\ prioridad.\\\\\\\\\\end{block}\\\\\\\\\\begin{block}{Supuestos}Todas\ las\ tareas\ criticas\ son\ periodicas,\ e\ independientes.\ El\ tiempo\ de\ computacion\ se\ conoce\ a\ priori,\ y\ el\ cambio\ de\ contexto\ es\ igual\ a\ cero,\ o\ ya\ esta\ considerado\ en\ el\ tiempo\ de\ computacion.\\\\\\\\\\end{block}\\\\\\\\\\end{frame}\\\\\\\\\\begin{frame}\\\\\\\\\\frametitle{Teoremas\ de\ Scheduling}\\\\\\\\\\begin{theorem}[Parametros\ a\ tomar\ en\ cuenta]$\\\\\\\\\\mu = \\\\\\\\\\Sigma \\\\\\\\\\frac{Ci}{Pi}$ Utilizacion\ del\ CPU\$\ 'Un' = n \'2''^'\\\\\\\\\\frac{'1'}{n} - '1' $ donde\ n\ es\ la\ cantidad\ de\ tareas\\\\\\\\\\end{theorem}\\\\\\\\\\begin{theorem}[Condiciones\ de\ suficiencia]$\\\\\\\\\\mu \\\\\\\\\\leq Un $ Tareas\ calendarizables\ $\\\\\\\\\\mu \\\\\\\\\\geq Un$ Debido\ a\ que\ es\ una\ condicion\ de\ sufuciencia\ podria\ ser\ calendarizable\$\\\\\\\\\\mu \\\\\\\\\\succ '1'$ Tareas\ no\ calendarizables\\\\\\\\\\end{theorem}\\\\\\\\\\end{frame}\\\\\\\\\\begin{frame}\\\\\\\\\\frametitle{Early\ Deadline\ First}\\\\\\\\\\begin{block}{Tipo}Algoritmo\ de\ Scheduling\ Dinamico,\ en\ donde\ las\ tareas\ son\ periodicas.\ Se\ considera\ un\ algoritmo\ optimo\ para\ algoritmos\ de\ prioridades\ dinamicas.\ Es\ un\ algoritmo\ de\ tipo\ expropiativo.\\\\\\\\\\end{block}\\\\\\\\\\begin{block}{Manejo\ de\ prioridades}El\ nombre\ del\ algoritmo\ indica\ la\ politica\ de\ prioridad.\ La\ prioridad\ es\ inversamente\ proporcional\ al\ tiempo\ que\ falta\ para\ el\ deadline.\ El\ deadline\ de\ cada\ tarea\ es\ igual\ al\ periodo\ de\ la\ misma. \\\\\\\\\\end{block}\\\\\\\\\\begin{block}{Supuestos}Todas\ las\ tareas\ criticas\ son\ periodicas,\ e\ independientes.\ El\ tiempo\ de\ computacion\ se\ conoce\ a\ priori,\ y\ el\ cambio\ de\ contexto\ es\ igual\ a\ cero,\ o\ ya\ esta\ considerado\ en\ el\ tiempo\ de\ computacion.\\\\\\\\\\end{block}\\\\\\\\\\end{frame}\\\\\\\\\\begin{frame}\\\\\\\\\\frametitle{Teoremas\ de\ Scheduling}\\\\\\\\\\begin{theorem}[Parametros\ a\ tomar\ en\ cuenta]$\\\\\\\\\\mu = \\\\\\\\\\Sigma \\\\\\\\\\frac{Ci}{Pi}$ Utilizacion\ del\ CPU\\\\\\\\\\end{theorem}\\\\\\\\\\begin{theorem}[Condiciones\ de\ suficiencia]$\\\\\\\\\\mu \\\\\\\\\\leq 1 $ Tareas\ calendarizables,\ ya\ que\ es\ una\ condicion\ necesario\ y\ de\ suficiencia\\\\\\\\\\end{theorem}\\\\\\\\\\end{frame}\\\\\\\\\\begin{frame}\\\\\\\\\\frametitle{Least Laxity First}\\\\\\\\\\begin{block}{Tipo y manejo dr prioridades}Es un algoritmo donde las prioridades se manejan de forma dinamica. Por cada unidad de tiempo se deben de evaluar las prioridades para asi conocer el Laxity de cada tarea, y tomar una decision sobre el scheduling de las mismas.\\\\\\\\\\end{block}\\\\\\\\\\end{frame}\\\\\\\\\\begin{frame}\\\\\\\\\\frametitle{Teoremas de Scheduling}\\\\\\\\\\begin{theorem}[Parametros a tomar en cuenta]$ Laxity = Di - Ti + Ci $ Donde D es el deadline proximo de la tarea, T es el tiempo actual de ejecucion y C es el tiempo computacional faltante de la tarea \\\\\\\\\\end{theorem}\\\\\\\\\\begin{theorem}[Criterio de Scheduling]Se toma el L menor entre todas las tareas en la cola de Ready y se ejecuta la tarea para cada tiempo de ejecucion\\\\\\\\\\end{theorem}\\\\\\\\\\end{frame}\\\\\\\\\\end{document} >> doc.tex";
 	printf("%s\n",cmd);
 
 	system(cmd);
