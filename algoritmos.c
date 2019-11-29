@@ -10,9 +10,9 @@
 #include "algoritmos.h"
 
 
-int NUMBER_OF_TASKS = 0;
-int ALGORITHMS_TO_EXECUTE;
-int AMOUNT_OF_PERIODS;
+uint NUMBER_OF_TASKS = 0;
+uint ALGORITHMS_TO_EXECUTE;
+uint AMOUNT_OF_PERIODS;
 int CRASH;
 int current_period;
 task_information *TASKS_TO_SCHEDULE;
@@ -106,7 +106,6 @@ void Verify_Crash(){
 
 void LLF(){
 	resetValues();
-	//EDF_schedulability_calculation(); Vernal agregue un metodo que diga si el algoritmo es calendarizable o no
 	CRASH=0;
 	current_period=0;
 	deploy();
@@ -116,7 +115,7 @@ void LLF(){
 		if  (CRASH==1){
 			break;
 		}
-		LLF_Select_Task(); //Modifique el codigo dentro de este metodo
+		LLF_Select_Task();
 		deploy();
 	}
 	if (CRASH==0){
@@ -132,9 +131,9 @@ void LLF_Select_Task(){
 	int laxity;
 	for(i=0;i<NUMBER_OF_TASKS*2;i++){
 		laxity = WAIT_LIST[i].deadline - current_period + WAIT_LIST[i].computation_time;
-		if(WAIT_LIST[i].status==1 && currentLowestLaxity>laxity){ // Vernal reemplazar WAIT_LIST[i].period_time por calculo de laxity
+		if(WAIT_LIST[i].status==1 && currentLowestLaxity>laxity){
 			position=i;
-			currentLowestLaxity=laxity;// Vernal sustituir por calculo de laxity
+			currentLowestLaxity=laxity;
 			found_candidate=1;
 		}
 	}
@@ -153,7 +152,7 @@ void deploy(){
 			addTasktInWait(i);
 		}
 		else{
-			//nothing to do, no new events added
+			//nothing to do, no new events added...codigo defensivo
 		}
 	}
 }
@@ -171,7 +170,6 @@ void addTasktInWait(int id){
 		if(WAIT_LIST[i].status==0){
 			WAIT_LIST[i].id=TASKS_TO_SCHEDULE[id].id;
 			WAIT_LIST[i].computation_time=TASKS_TO_SCHEDULE[id].computation_time;
-			// WAIT_LIST[i].period_time=TASKS_TO_SCHEDULE[id].period_time;
 			WAIT_LIST[i].deadline=TASKS_TO_SCHEDULE[id].period_time+current_period;
 			WAIT_LIST[i].arrival_time=current_period;
 			WAIT_LIST[i].total_computed=0;
@@ -186,18 +184,13 @@ void addTasktInWait(int id){
 	}
 }
 
-//THE FOLLOWING SHOULD BE REPLACED BY GTK
+
 void create_tasks(){
-	// NUMBER_OF_TASKS = cant_procesos;
 	AMOUNT_OF_PERIODS=24;
 
 	WAIT_LIST =  (task_information *)malloc(NUMBER_OF_TASKS*2 * sizeof(task_information));
 
   for (uint i = 0; i < NUMBER_OF_TASKS; i++) {
-
-    if (task_characteristics_var.Ci[i]>task_characteristics_var.Pi[i]){
-      test_time = test_time + 1;
-    }
     printf("Task ID: %d Ci = %d Di = %d\n", TASKS_TO_SCHEDULE[i].id, TASKS_TO_SCHEDULE[i].computation_time,TASKS_TO_SCHEDULE[i].period_time);
   }
 

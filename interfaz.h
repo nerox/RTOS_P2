@@ -4,7 +4,6 @@
 extern GtkWidget *assistant;
 extern GtkWidget *view;
 extern GtkWidget *window;
-// extern int cant_procesos;
 extern GtkTreeModel *model;
 extern bool slide;
 extern bool rm_state;
@@ -15,13 +14,6 @@ extern int test_time;
 
 extern GtkWidget *view_summary;
 extern GtkTreeModel *model_summary;
-
-struct task_characteristics {
-  uint *Ci;
-  uint *Pi;
-};
-
-extern struct task_characteristics task_characteristics_var;
 
 enum
 {

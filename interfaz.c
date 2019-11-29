@@ -11,7 +11,6 @@ GtkWidget *assistant;
 GtkWidget *view;
 GtkWidget *window;
 GtkTreeModel *model;
-// int cant_procesos = 0;
 bool slide = 0;
 bool rm_state = 0;
 bool edf_state = 0;
@@ -20,7 +19,6 @@ bool first_time = 0;
 int test_time = 0;
 GtkWidget *view_summary;
 GtkTreeModel *model_summary;
-struct task_characteristics task_characteristics_var;
 
 void
 on_assistant_apply (GtkWidget *widget, gpointer data)
@@ -37,7 +35,7 @@ on_assistant_close_cancel (GtkWidget *widget, gpointer data)
   gtk_widget_destroy (*assistant);
   *assistant = NULL;
   for (uint i = 0; i < NUMBER_OF_TASKS; i++) {
-    printf("Process %d Ci = %d Pi = %i\n",i, task_characteristics_var.Ci[i] , task_characteristics_var.Pi[i] );
+    printf("Process %d Ci = %d Pi = %i\n",i, TASKS_TO_SCHEDULE[i].computation_time , TASKS_TO_SCHEDULE[i].period_time );
   }
   printf("test_destroy\n" );
   gtk_main_quit();
@@ -67,7 +65,7 @@ void cell_edited_comp_time (GtkCellRendererText *cell,
               COL_COMPUTATION_TIME, aux_int ,
               -1);
   printf("Ci %s\n", path_string);
-  task_characteristics_var.Ci[atoi(path_string)] = aux_int;
+  TASKS_TO_SCHEDULE[atoi(path_string)].computation_time = aux_int;
 }
 
 void cell_edited_period (GtkCellRendererText *cell,
@@ -95,7 +93,7 @@ void cell_edited_period (GtkCellRendererText *cell,
               COL_PERIOD, aux_int ,
               -1);
   printf("Pi %s\n", path_string);
-  task_characteristics_var.Pi[atoi(path_string)] = aux_int;
+  TASKS_TO_SCHEDULE[atoi(path_string)].period_time = aux_int;
 }
 
 gboolean update_model (gpointer user_data, int current_page)
@@ -117,8 +115,9 @@ gboolean update_model (gpointer user_data, int current_page)
                         COL_PERIOD, 0,
                         -1);
     if (current_page == 2) {
-      task_characteristics_var.Pi[i] = 0;
-      task_characteristics_var.Ci[i] = 0;
+      TASKS_TO_SCHEDULE[i].id=i;
+      TASKS_TO_SCHEDULE[i].period_time = 0;
+      TASKS_TO_SCHEDULE[i].computation_time = 0;
     }
   }
 
@@ -141,18 +140,16 @@ void fill_out_model_summary ()
   gtk_tree_model_get_iter (GTK_TREE_MODEL (ListModel),
                                 &iter,
                                 path);
-    gtk_list_store_set (store, &iter,
-                        COL_COMPUTATION_TIME, task_characteristics_var.Ci[i],
-                        COL_PERIOD, task_characteristics_var.Pi[i],
-                        -1);
-    TASKS_TO_SCHEDULE[i].id=i;
-    TASKS_TO_SCHEDULE[i].computation_time=task_characteristics_var.Ci[i];
-    TASKS_TO_SCHEDULE[i].period_time=task_characteristics_var.Pi[i];
 
-    if (task_characteristics_var.Ci[i]>task_characteristics_var.Pi[i]){
+    gtk_list_store_set (store, &iter,
+                        COL_COMPUTATION_TIME, TASKS_TO_SCHEDULE[i].computation_time,
+                        COL_PERIOD, TASKS_TO_SCHEDULE[i].period_time,
+                        -1);
+
+    if (TASKS_TO_SCHEDULE[i].computation_time > TASKS_TO_SCHEDULE[i].period_time){
       test_time = test_time + 1;
     }
-    printf("Task %d Ci %d Di %d\n", i, task_characteristics_var.Ci[i],task_characteristics_var.Pi[i]);
+    printf("Task %d Ci %d Di %d\n", i, TASKS_TO_SCHEDULE[i].computation_time,TASKS_TO_SCHEDULE[i].period_time);
   }
 
   GtkWidget *current_page;
@@ -201,8 +198,6 @@ if (current_page == 3) {
 
   g_signal_connect(renderer, "edited", (GCallback) cell_edited_comp_time, NULL);
 
-  //gtk_tree_view_insert_column (GTK_TREE_VIEW (view), COL_PROGRESS,-1);
-
   renderer = gtk_cell_renderer_text_new ();
   gtk_tree_view_insert_column_with_attributes (GTK_TREE_VIEW (view_generic),
                                              -1,
@@ -217,9 +212,6 @@ if (current_page == 3) {
 
   g_signal_connect(renderer, "edited", (GCallback) cell_edited_period, NULL);
 
-
-  // model = create_and_fill_model (num_process);
-
   model = GTK_TREE_MODEL(gtk_list_store_new (NUM_COLS, G_TYPE_UINT, G_TYPE_UINT, G_TYPE_UINT));
   gtk_tree_view_set_model (GTK_TREE_VIEW (view_generic), model);
 
@@ -227,8 +219,6 @@ if (current_page == 3) {
 
   return view_generic;
 }
-
-//****************************************************************************************
 
 void
 on_entry_changed (GtkWidget *widget, gpointer data)
@@ -371,7 +361,6 @@ create_page2 (GtkWidget *assistant)
   gtk_box_pack_start (GTK_BOX (box), llf, FALSE, FALSE, 0);
   gtk_widget_show_all (box);
   gtk_assistant_append_page (GTK_ASSISTANT (assistant), box);
-  //gtk_assistant_set_page_complete (GTK_ASSISTANT (assistant), box, TRUE);
   gtk_assistant_set_page_title (GTK_ASSISTANT (assistant), box, "Calendarizador");
   gtk_assistant_set_page_type (GTK_ASSISTANT (assistant), box, GTK_ASSISTANT_PAGE_INTRO);
 }
@@ -385,9 +374,6 @@ create_page5 (GtkWidget *assistant)
   GtkWidget *label;
   GtkWidget *grid;
   GtkWidget *algoritmos, *rm, *llf, *edf, *slides;
-
-
-  // int current_page;
 
   box1 = gtk_box_new (GTK_ORIENTATION_VERTICAL, 0);
   gtk_widget_show (box1);
@@ -541,7 +527,6 @@ create_page3 (GtkWidget *assistant)
     gtk_widget_show (box2);
 
   gtk_assistant_append_page (GTK_ASSISTANT (assistant), box1);
-  //gtk_assistant_set_page_type (GTK_ASSISTANT (assistant), box1, GTK_ASSISTANT_PAGE_CONTENT);
   gtk_assistant_set_page_type (GTK_ASSISTANT (assistant), box1, GTK_ASSISTANT_PAGE_INTRO);
   gtk_assistant_set_page_complete (GTK_ASSISTANT (assistant), box1, TRUE);
   gtk_assistant_set_page_title (GTK_ASSISTANT (assistant), box1, "Slide Option");
@@ -574,12 +559,9 @@ on_assistant_prepare (GtkWidget *widget, GtkWidget *page, gpointer data)
 
 
   if (current_page == 1) {
-    task_characteristics_var.Ci = malloc (NUMBER_OF_TASKS * sizeof(uint));
-    task_characteristics_var.Pi = malloc (NUMBER_OF_TASKS * sizeof(uint));
     TASKS_TO_SCHEDULE =  (task_information *)malloc(NUMBER_OF_TASKS * sizeof(task_information));
   }
   else if (current_page == 2) {
-    printf("hola4\n");
     ListModel = gtk_tree_view_get_model (GTK_TREE_VIEW(view));
     update_model(ListModel, 2);
   }
@@ -589,7 +571,6 @@ on_assistant_prepare (GtkWidget *widget, GtkWidget *page, gpointer data)
     update_model(ListModel, 3);
   }
   else if (current_page == 4){
-    printf("hola5\n");
     first_time = 1;
     fill_out_model_summary();
     }
