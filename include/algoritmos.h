@@ -12,6 +12,8 @@ typedef struct {
  int status;
 }task_information;
 
+#define MAX_CMM_LEN 6000
+
 extern uint NUMBER_OF_TASKS;
 extern uint ALGORITHMS_TO_EXECUTE;
 extern uint AMOUNT_OF_PERIODS;
@@ -37,6 +39,13 @@ void RM_Select_Task();
 void EDF_Select_Task();
 void undeploy(int position);
 void LLF_Select_Task();
+void latex_rm();
+void latex_edf();
+void latex_llf();
+void latex_rm_edf();
+void latex_rm_lff();
+void latex_edf_lff();
+void latex_rm_edf_lff();
 
 
 #endif

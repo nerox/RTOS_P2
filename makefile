@@ -16,4 +16,4 @@ MakeLibs:
 
 
 clean:
-	rm -rf ./lib/*.o ./lib/*.so $(Archivo)
+	rm -rf ./lib/*.o ./lib/*.so $(Archivo) ./docs/*
