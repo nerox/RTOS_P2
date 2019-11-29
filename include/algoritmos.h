@@ -21,7 +21,7 @@ extern int CRASH;
 extern int current_period;
 extern task_information *TASKS_TO_SCHEDULE;
 extern task_information *WAIT_LIST;
-
+extern int * scheduled_Matrix;
 
 void EDF();
 void RM();
@@ -46,6 +46,10 @@ void latex_rm_edf();
 void latex_rm_lff();
 void latex_edf_lff();
 void latex_rm_edf_lff();
-
+void latex_table_slide_header(char algorithm []);
+void end_latex_slide();
+void latex_table_slide(char algorithm[]);
+void cleanOutPutMatrix();
+void endlatex();
 
 #endif
