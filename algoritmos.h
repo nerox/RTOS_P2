@@ -1,14 +1,6 @@
-#ifndef TASKS_H
-#define TASKS_H
-#include <stdio.h>
-#include <string.h>
-#include <unistd.h>
-#include <stdlib.h>
-#include <math.h>
-int NUMBER_OF_TASKS;
-int ALGORITHMS_TO_EXECUTE;
-int AMOUNT_OF_PERIODS;
-int CRASH;
+#ifndef ALGORITMOS_H
+#define ALGORITMOS_H
+
 typedef struct {
  int id;
  int computation_time;
@@ -19,9 +11,16 @@ typedef struct {
  int total_computed; //use this to evaluate how much of the task has been executed
  int status;
 }task_information;
-int current_period;
-task_information *TASKS_TO_SCHEDULE;   
-task_information *WAIT_LIST;
+
+extern int NUMBER_OF_TASKS;
+extern int ALGORITHMS_TO_EXECUTE;
+extern int AMOUNT_OF_PERIODS;
+extern int CRASH;
+extern int current_period;
+extern task_information *TASKS_TO_SCHEDULE;
+extern task_information *WAIT_LIST;
+
+
 void EDF();
 void RM();
 void LLF();
@@ -38,8 +37,6 @@ void RM_Select_Task();
 void EDF_Select_Task();
 void undeploy(int position);
 void LLF_Select_Task();
+
+
 #endif
-
-
-
-

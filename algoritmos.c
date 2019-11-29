@@ -1,12 +1,22 @@
-#include "Tasks.h"
+
+#include <stdio.h>
+#include <string.h>
+#include <unistd.h>
+#include <stdlib.h>
+#include <math.h>
+#include <stdbool.h>
+#include <gtk/gtk.h>
+#include "interfaz.h"
+#include "algoritmos.h"
 
 
-
-int main (int argc, char **argv)
-{
-	create_tasks();
-	return 0;
-}
+int NUMBER_OF_TASKS = 0;
+int ALGORITHMS_TO_EXECUTE;
+int AMOUNT_OF_PERIODS;
+int CRASH;
+int current_period;
+task_information *TASKS_TO_SCHEDULE;
+task_information *WAIT_LIST;
 
 void EDF(){
 	resetValues();
@@ -161,7 +171,7 @@ void addTasktInWait(int id){
 		if(WAIT_LIST[i].status==0){
 			WAIT_LIST[i].id=TASKS_TO_SCHEDULE[id].id;
 			WAIT_LIST[i].computation_time=TASKS_TO_SCHEDULE[id].computation_time;
-			WAIT_LIST[i].period_time=TASKS_TO_SCHEDULE[id].period_time;
+			// WAIT_LIST[i].period_time=TASKS_TO_SCHEDULE[id].period_time;
 			WAIT_LIST[i].deadline=TASKS_TO_SCHEDULE[id].period_time+current_period;
 			WAIT_LIST[i].arrival_time=current_period;
 			WAIT_LIST[i].total_computed=0;
@@ -178,38 +188,18 @@ void addTasktInWait(int id){
 
 //THE FOLLOWING SHOULD BE REPLACED BY GTK
 void create_tasks(){
-	NUMBER_OF_TASKS=3;
-	ALGORITHMS_TO_EXECUTE=3; // THIS WOULD HOLD WHICH ALGORITHMS THE USER WANTS TO EXECUTE 1 RM, 2 EDF, 3 LLF, 4 RM & EDF, 5 RM LLF, 6 EDF & LLF, 7 RM & EDF & LLF
+	// NUMBER_OF_TASKS = cant_procesos;
 	AMOUNT_OF_PERIODS=24;
 
-	/*
-		The following should be replaced by GTK, this simulates the behavior of setting up the tasks and their settings
-	*/
-	TASKS_TO_SCHEDULE =  (task_information *)malloc(NUMBER_OF_TASKS * sizeof(task_information)); //this array will held all of the information about the tasks being executed
-	WAIT_LIST =  (task_information *)malloc(NUMBER_OF_TASKS*2 * sizeof(task_information)); //this array will be the wait list
-	//Set the information of task 1
-	TASKS_TO_SCHEDULE[0].id=0;
-	TASKS_TO_SCHEDULE[0].computation_time=2;
-	TASKS_TO_SCHEDULE[0].period_time=6;
+	WAIT_LIST =  (task_information *)malloc(NUMBER_OF_TASKS*2 * sizeof(task_information));
 
-	//Set the information of task 2
-	TASKS_TO_SCHEDULE[1].id=1;
-	TASKS_TO_SCHEDULE[1].computation_time=2;
-	TASKS_TO_SCHEDULE[1].period_time=8;
+  for (uint i = 0; i < NUMBER_OF_TASKS; i++) {
 
-	//Set the information of task 3
-	TASKS_TO_SCHEDULE[2].id=2;
-	TASKS_TO_SCHEDULE[2].computation_time=3;
-	TASKS_TO_SCHEDULE[2].period_time=10;
-
-	//Set the information of task 4
-/*	TASKS_TO_SCHEDULE[3].id=3;
-	TASKS_TO_SCHEDULE[3].computation_time=1;
-	TASKS_TO_SCHEDULE[3].period_time=6;
-	//Set the information of task 5
-	TASKS_TO_SCHEDULE[4].id=4;
-	TASKS_TO_SCHEDULE[4].computation_time=1;
-	TASKS_TO_SCHEDULE[4].period_time=6;*/
+    if (task_characteristics_var.Ci[i]>task_characteristics_var.Pi[i]){
+      test_time = test_time + 1;
+    }
+    printf("Task ID: %d Ci = %d Di = %d\n", TASKS_TO_SCHEDULE[i].id, TASKS_TO_SCHEDULE[i].computation_time,TASKS_TO_SCHEDULE[i].period_time);
+  }
 
 	switch (ALGORITHMS_TO_EXECUTE)
 	{
