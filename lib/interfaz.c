@@ -450,7 +450,7 @@ create_page5 (GtkWidget *assistant)
   gtk_box_pack_start (GTK_BOX (box1), grid, TRUE, TRUE, 0);
   gtk_widget_show (grid);
 
-  label = gtk_label_new ("Si el boton Apply no esta habilitado, en alguna tarea el Ci es mayor a Pi");
+  label = gtk_label_new ("*** Si el boton Apply no esta habilitado, en alguna tarea el Ci es mayor a Pi ***");
   gtk_box_pack_start (GTK_BOX (box1), label, TRUE, TRUE, 0);
   gtk_widget_show (label);
 
