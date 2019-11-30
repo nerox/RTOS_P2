@@ -266,7 +266,6 @@ void create_tasks(){
 		}
 		EDF();
 		if(slide==0){
-			EDF_schedulability_calculation();
 			latex_table_slide("EDF");
 			end_latex_slide();
 		}
@@ -651,7 +650,7 @@ void latex_rm_evaluation(int result, float mu,float u){
 	else if (result==2){
 		sprintf(intstr, "\\begin{block}{Prueba de Schedulability} $U(n)=%f \\leq  \\mu=%f$ \\end{block}",mu,u);
 		fprintf(out, "%s",intstr);		
-		fprintf(out, "%s", "\\Las pruebas podrían ser calendarizables, se recomienda simular extensamente");	
+		fprintf(out, "%s", "Las pruebas podrían ser calendarizables, se recomienda simular extensamente");	
 	}
 	else{
 		sprintf(intstr, "\\begin{block}{Prueba de Schedulability} $\\mu=%f \\leq 1 $ end{block}",mu);	
