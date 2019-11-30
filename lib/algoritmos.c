@@ -412,21 +412,21 @@ void resetValues(){
 
 }
 void latex_table_slide_header(char algorithm []){
-	FILE *out = fopen("./docs/simulacion.tex", "a");  
+	FILE *out = fopen("./docs/simulacion.tex", "a");
 	fprintf(out, "%s", "\\begin{frame}\\frametitle{");
 	fprintf(out,"%s",algorithm);
 	fprintf(out,"%s"," Scheduling Results}");
-	fclose(out); 
+	fclose(out);
 }
 void end_latex_slide(){
-	FILE *out = fopen("./docs/simulacion.tex", "a");  
+	FILE *out = fopen("./docs/simulacion.tex", "a");
 	fprintf(out, "%s","\\end{frame}");
-	fclose(out);   
+	fclose(out);
 }
 void latex_table_slide(char algorithm []){
 	char tables[MAX_CMM_LEN]="";
-	FILE *out = fopen("./docs/simulacion.tex", "a");  
-	fprintf(out, "%s","\\begin{table}\\adjustbox{max height=\\dimexpr\\textheight-5.5cm\\relax,max width=\\textwidth}{\\begin{tabular}");  
+	FILE *out = fopen("./docs/simulacion.tex", "a");
+	fprintf(out, "%s","\\begin{table}\\adjustbox{max height=\\dimexpr\\textheight-5.5cm\\relax,max width=\\textwidth}{\\begin{tabular}");
 	strcat(tables, "{l");
 	int i,j;
 	for (i=0;i<AMOUNT_OF_PERIODS+2;i++){
@@ -514,15 +514,23 @@ void latex_table_slide(char algorithm []){
 			}
 		}
 	strcat(tables, "&\\\\ \n");
-	fprintf(out, "%s", tables);  
+	fprintf(out, "%s", tables);
 	fprintf(out, "%s", "\\end{tabular}\n}\n\\caption{");
 	fprintf(out,"%s",algorithm);
 	fprintf(out, "%s"," Simulation results}\\vspace{-1.5em}\\end{table}");
-	fclose(out); 
+	fclose(out);
 }
 void endlatex(){
 	char cmd[MAX_CMM_LEN] = "echo \\\\\\\\\\end{document} >> ./docs/simulacion.tex";
 	system(cmd);
+	// system("cd docs");
+	// system("ls");
+	// system("cd docs");
+	system("pdflatex ./docs/simulacion.tex");
+	system("mv *.pdf ./docs");
+	system("rm simulacion.*");
+	system("xdg-open ./docs/simulacion.pdf");
+	// system("cd ..");
 }
 void cleanOutPutMatrix(){
 
