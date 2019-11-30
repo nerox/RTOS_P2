@@ -424,9 +424,10 @@ void end_latex_slide(){
 	fclose(out);
 }
 void latex_table_slide(char algorithm []){
+	int crashPosition;
 	char tables[MAX_CMM_LEN]="";
-	FILE *out = fopen("./docs/simulacion.tex", "a");
-	fprintf(out, "%s","\\begin{table}\\adjustbox{max height=\\dimexpr\\textheight-5.5cm\\relax,max width=\\textwidth}{\\begin{tabular}");
+	FILE *out = fopen("./docs/simulacion.tex", "a");  
+	fprintf(out, "%s","\\begin{table}\\adjustbox{max height=\\dimexpr\\textheight-5.5cm\\relax,max width=\\textwidth}{\\begin{tabular}");  
 	strcat(tables, "{l");
 	int i,j;
 	for (i=0;i<AMOUNT_OF_PERIODS+2;i++){
@@ -443,7 +444,7 @@ void latex_table_slide(char algorithm []){
 	for (i=0;i<NUMBER_OF_TASKS;i++){
 		sprintf(intstr, "Task %d", i);
 		strcat(tables, intstr);
-		for (j=1;j<=AMOUNT_OF_PERIODS+1;j++){
+		for (j=1;j<=AMOUNT_OF_PERIODS;j++){
 			int COLOR=scheduled_Matrix[i*AMOUNT_OF_PERIODS-1 + j];
 			switch (COLOR)
 			{
@@ -466,6 +467,7 @@ void latex_table_slide(char algorithm []){
 				strcat(tables, "&\\cellcolor{orange}");
 				break;
 			case 6:
+				crashPosition=j-1;
 				strcat(tables, "&\\cellcolor{red}");
 				break;
 			default: // code to be executed if n doesn't match any cases
@@ -478,12 +480,23 @@ void latex_table_slide(char algorithm []){
 	strcat(tables, "\\hline \n");
 	sprintf(intstr, "Task Arrivals");
 	strcat(tables, intstr);
+	int crash=0;
+	printf("%d Crash!!!!!\n",crashPosition);
 	for (j=0;j<AMOUNT_OF_PERIODS+1;j++){
 			int COLOR=-1;
-			for (i=0;i<NUMBER_OF_TASKS;i++){
-				if(j%TASKS_TO_SCHEDULE[i].period_time==0){
-					COLOR=TASKS_TO_SCHEDULE[i].id;
+			if (crashPosition!=j){
+						
+				for (i=0;i<NUMBER_OF_TASKS;i++){
+					
+					if(j%TASKS_TO_SCHEDULE[i].period_time==0 && crash!=1){
+						COLOR=TASKS_TO_SCHEDULE[i].id;
+						
+					}
 				}
+			}
+			else{
+				crash=1;
+				COLOR=6;
 			}
 			switch (COLOR)
 			{
@@ -514,11 +527,11 @@ void latex_table_slide(char algorithm []){
 			}
 		}
 	strcat(tables, "&\\\\ \n");
-	fprintf(out, "%s", tables);
+	fprintf(out, "%s", tables);  
 	fprintf(out, "%s", "\\end{tabular}\n}\n\\caption{");
 	fprintf(out,"%s",algorithm);
 	fprintf(out, "%s"," Simulation results}\\vspace{-1.5em}\\end{table}");
-	fclose(out);
+	fclose(out); 
 }
 void endlatex(){
 	char cmd[MAX_CMM_LEN] = "echo \\\\\\\\\\end{document} >> ./docs/simulacion.tex";
