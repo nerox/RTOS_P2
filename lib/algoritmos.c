@@ -653,9 +653,9 @@ void latex_rm_evaluation(int result, float mu,float u){
 		fprintf(out, "%s", "Las pruebas podrían ser calendarizables, se recomienda simular extensamente");	
 	}
 	else{
-		sprintf(intstr, "\\begin{block}{Prueba de Schedulability} $\\mu=%f \\leq 1 $ end{block}",mu);	
+		sprintf(intstr, "\\begin{block}{Prueba de Schedulability} $\\mu=%f \\leq 1 $ \\end{block}",mu);	
 		fprintf(out, "%s",intstr);	
-		fprintf(out, "%s", "Las pruebas NO calendarizables");	
+		fprintf(out, "%s", "Las pruebas NO son calendarizables");	
 	}	
 	fprintf(out, "%s","\\end{frame}");
 	fclose(out);   
@@ -673,9 +673,9 @@ void latex_EDF_evaluation(int result, float mu){
 	fprintf(out, "%s", "Las pruebas son calendarizables");	
 	}
 	else{
-		sprintf(intstr, "\\begin{block}{Prueba de Schedulability} $\\mu=%f \\leq 1 $ end{block}",mu);	
+		sprintf(intstr, "\\begin{block}{Prueba de Schedulability} $\\mu=%f \\leq 1 $ \\end{block}",mu);	
 		fprintf(out, "%s",intstr);	
-		fprintf(out, "%s", "Las pruebas NO calendarizables");	
+		fprintf(out, "%s", "Las pruebas NO son calendarizables");	
 	}	
 	fprintf(out, "%s","\\end{frame}");
 	fclose(out);   
@@ -692,9 +692,9 @@ void latex_LLF_evaluation(int result, float mu){
 	fprintf(out, "%s", "Las pruebas son calendarizables");	
 	}
 	else{
-		sprintf(intstr, "\\begin{block}{Prueba de Schedulability} $\\mu=%f \\leq 1 $ end{block}",mu);	
+		sprintf(intstr, "\\begin{block}{Prueba de Schedulability} $\\mu=%f \\leq 1 $ \\end{block}",mu);	
 		fprintf(out, "%s",intstr);	
-		fprintf(out, "%s", "Las pruebas NO calendarizables");	
+		fprintf(out, "%s", "Las pruebas NO son calendarizables");	
 	}	
 	fprintf(out, "%s","\\end{frame}");
 	fclose(out);   
