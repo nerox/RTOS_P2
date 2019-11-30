@@ -30,6 +30,7 @@ void deploy();
 void create_tasks();
 void EDF_schedulability_calculation();
 void RM_schedulability_calculation();
+void LLF_schedulability_calculation();
 double summation_EDF_RM();
 double u_n_calculation();
 void addTasktInWait(int id);
@@ -51,5 +52,7 @@ void end_latex_slide();
 void latex_table_slide(char algorithm[]);
 void cleanOutPutMatrix();
 void endlatex();
-
+void latex_rm_evaluation(int result, float mu,float u);
+void latex_EDF_evaluation(int result, float mu);
+void latex_LLF_evaluation(int result, float mu);
 #endif
